@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Estimate your Malaysian income tax before filing on MyTax. Simple, educational tax calculator for residents.">
+  <title>Tax Check Malaysia | Estimate Before You File</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Preconnect for better performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Sticky Progress Header -->
+  <header class="progress-header" role="banner">
+    <div class="container">
+      <div class="logo">
+        <span class="logo-icon">🧮</span>
+        <span class="logo-text">Tax Check Malaysia</span>
+      </div>
+      <nav class="progress-steps" aria-label="Progress">
+        <div class="step-indicator active" data-step="intro" aria-current="step">
+          <span class="step-number">1</span>
+          <span class="step-label">Intro</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-indicator" data-step="income">
+          <span class="step-number">2</span>
+          <span class="step-label">Income</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-indicator" data-step="reliefs">
+          <span class="step-number">3</span>
+          <span class="step-label">Reliefs</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-indicator" data-step="results">
+          <span class="step-number">4</span>
+          <span class="step-label">Results</span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="main-content">
+    <div class="container">
+      
+      <!-- SECTION 1: Top Banner - Expectation Setting -->
+      <div id="top-banner" class="top-banner">
+        <div class="banner-content">
+          <span class="banner-icon">⚠️</span>
+          <p>This is a simple tax estimator, not an official LHDN tool. Results are based on built-in rules and your inputs. Always verify before filing.</p>
+        </div>
+        <button type="button" class="banner-dismiss" onclick="app.dismissBanner()" aria-label="Dismiss banner">×</button>
+      </div>
+      
+      <!-- Section 1: Intro Card -->
+      <section id="intro-section" class="card section-card active">
+        <div class="card-header">
+          <div class="welcome-emoji">👋</div>
+          <h1>Estimate Your Tax Before MyTax</h1>
+          <p class="subtitle">Quick, simple, and free. Know where you stand in minutes.</p>
+        </div>
+        
+        <div class="card-body">
+          <div class="intro-points">
+            <div class="intro-point">
+              <span class="point-icon">✓</span>
+              <p>Estimate if you need to file income tax</p>
+            </div>
+            <div class="intro-point">
+              <span class="point-icon">✓</span>
+              <p>See what tax reliefs may apply to you</p>
+            </div>
+            <div class="intro-point">
+              <span class="point-icon">✓</span>
+              <p>Get a rough idea of your tax amount</p>
+            </div>
+          </div>
+
+          <div class="info-box info-box--calm">
+            <strong>📋 Important Note</strong>
+            <p>This tool provides an <strong>educational estimate only</strong>. Official filing must still be done through <a href="https://mytax.hasil.gov.my" target="_blank" rel="noopener noreferrer">MyTax</a>. Results are not a substitute for professional tax advice.</p>
+          </div>
+
+          <div class="who-for">
+            <h3>Who is this for?</h3>
+            <ul>
+              <li>Malaysian resident individuals</li>
+              <li>Employment income only (no business income)</li>
+              <li>First-time filers or anyone wanting a quick check</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-primary btn-large" onclick="app.goToStep('income')">
+            Start Estimating
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SECTION 2: How This Works (Collapsible) -->
+      <section class="card collapsible-card">
+        <button type="button" class="collapsible-header" onclick="app.toggleCollapsible(this)">
+          <span class="collapsible-icon">📊</span>
+          <span class="collapsible-title">How this estimate is calculated</span>
+          <span class="collapsible-arrow">▼</span>
+        </button>
+        <div class="collapsible-content">
+          <div class="how-it-works">
+            <p class="how-intro">We estimate your tax in 5 simple steps:</p>
+            <div class="steps-list">
+              <div class="step-item">
+                <span class="step-num">1</span>
+                <div class="step-text">
+                  <strong>Total Income</strong>
+                  <span>We use the yearly income you enter.</span>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">2</span>
+                <div class="step-text">
+                  <strong>Minus Reliefs</strong>
+                  <span>We subtract eligible tax reliefs (like EPF, lifestyle, etc), up to their limits.</span>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">3</span>
+                <div class="step-text">
+                  <strong>Chargeable Income</strong>
+                  <span>This is the remaining amount after reliefs.</span>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">4</span>
+                <div class="step-text">
+                  <strong>Apply Tax Rates</strong>
+                  <span>We apply Malaysia's progressive tax rates to estimate your tax.</span>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">5</span>
+                <div class="step-text">
+                  <strong>Rebate (if eligible)</strong>
+                  <span>If your chargeable income is low, you may get a rebate that reduces your tax further.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: What This Tool Is Based On (Collapsible) -->
+      <section class="card collapsible-card">
+        <button type="button" class="collapsible-header" onclick="app.toggleCollapsible(this)">
+          <span class="collapsible-icon">📋</span>
+          <span class="collapsible-title">What this tool is based on</span>
+          <span class="collapsible-arrow">▼</span>
+        </button>
+        <div class="collapsible-content">
+          <div class="based-on">
+            <div class="based-on-section">
+              <h4>This tool uses:</h4>
+              <ul>
+                <li>Manually configured Malaysian tax brackets</li>
+                <li>Relief limits for a specific tax year</li>
+                <li>Rebate rules for resident individuals</li>
+                <li>Your input data</li>
+              </ul>
+            </div>
+            <div class="based-on-section based-on--not">
+              <h4>It does NOT:</h4>
+              <ul>
+                <li>Connect to LHDN</li>
+                <li>Access your real financial records</li>
+                <li>Automatically update rules</li>
+              </ul>
+            </div>
+            <div class="tax-year-display">
+              <span class="year-badge">Using YA <span id="display-tax-year">2025</span> rules</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: Simple Formula (Collapsible) -->
+      <section class="card collapsible-card">
+        <button type="button" class="collapsible-header" onclick="app.toggleCollapsible(this)">
+          <span class="collapsible-icon">🧮</span>
+          <span class="collapsible-title">Simple formula</span>
+          <span class="collapsible-arrow">▼</span>
+        </button>
+        <div class="collapsible-content">
+          <div class="simple-formula">
+            <div class="formula-row">
+              <span class="formula-label">Chargeable Income</span>
+              <span class="formula-equals">=</span>
+              <span class="formula-value">Income − Reliefs</span>
+            </div>
+            <div class="formula-row">
+              <span class="formula-label">Estimated Tax</span>
+              <span class="formula-equals">=</span>
+              <span class="formula-value">Based on tax brackets</span>
+            </div>
+            <div class="formula-row">
+              <span class="formula-label">Final Tax</span>
+              <span class="formula-equals">=</span>
+              <span class="formula-value">Estimated Tax − Rebate (if applicable)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 10: Supported Scope Box -->
+      <section class="card scope-card">
+        <div class="scope-header">
+          <span class="scope-icon">✓</span>
+          <h3>Currently supports</h3>
+        </div>
+        <ul class="scope-list scope-list--supported">
+          <li>Malaysian resident individuals</li>
+          <li>Employment income only</li>
+          <li>Basic relief scenarios</li>
+        </ul>
+        <div class="scope-divider"></div>
+        <div class="scope-header">
+          <span class="scope-icon scope-icon--not">✕</span>
+          <h3>Not yet supported</h3>
+        </div>
+        <ul class="scope-list scope-list--not-supported">
+          <li>Business or freelance income</li>
+          <li>Foreign income</li>
+          <li>Non-resident tax cases</li>
+          <li>Complex tax situations</li>
+        </ul>
+      </section>
+
+      <!-- Section 2: Income -->
+      <section id="income-section" class="card section-card">
+        <div class="card-header">
+          <span class="section-badge">Step 1</span>
+          <h2>Your Income Details</h2>
+          <p class="subtitle">Tell us about your employment income for the year</p>
+        </div>
+
+        <div class="card-body">
+          <!-- Tax Year Selector -->
+          <div class="form-group">
+            <label for="tax-year" class="form-label">Tax Year (Year of Assessment)</label>
+            <select id="tax-year" class="form-select" onchange="app.onTaxYearChange()">
+              <!-- Options populated by JS -->
+            </select>
+            <p class="form-hint">Select the tax year you want to estimate for</p>
+          </div>
+
+          <!-- Resident Status -->
+          <div class="form-group">
+            <label class="form-label">Resident Status</label>
+            <div class="radio-group">
+              <label class="radio-card">
+                <input type="radio" name="resident-status" value="resident" checked onchange="app.onResidentChange()">
+                <span class="radio-content">
+                  <span class="radio-title">Malaysian Resident</span>
+                  <span class="radio-desc">I normally live in Malaysia</span>
+                </span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="resident-status" value="not-sure" onchange="app.onResidentChange()">
+                <span class="radio-content">
+                  <span class="radio-title">Not Sure</span>
+                  <span class="radio-desc">I'm unsure of my resident status</span>
+                </span>
+              </label>
+            </div>
+            <div id="resident-warning" class="warning-box hidden">
+              <strong>⚠️ Note:</strong> Tax rates differ for non-residents. This estimate assumes resident rates and may not be accurate for you.
+            </div>
+          </div>
+
+          <!-- Annual Employment Income -->
+          <div class="form-group">
+            <label for="annual-income" class="form-label">Annual Employment Income</label>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="annual-income" class="form-input" min="0" step="100" placeholder="e.g., 60000" oninput="app.onIncomeChange()">
+            </div>
+            <p class="form-hint">Your total salary, wages, and employment benefits for the year</p>
+          </div>
+
+          <!-- Monthly Tax Deduction (PCB/MTD) -->
+          <div class="form-group">
+            <label for="mtd-paid" class="form-label">Monthly Tax Deduction (PCB/MTD) Paid</label>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="mtd-paid" class="form-input" min="0" step="10" placeholder="e.g., 2400" oninput="app.onMtdChange()">
+            </div>
+            <p class="form-hint">Total PCB/MTD deducted from your salary this year (check your EA form)</p>
+          </div>
+
+          <!-- Optional Bonus/Allowance -->
+          <div class="form-group form-group--optional">
+            <label for="bonus-income" class="form-label">
+              Bonus & Allowances
+              <span class="label-optional">(Optional)</span>
+            </label>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="bonus-income" class="form-input" min="0" step="100" placeholder="e.g., 5000" oninput="app.onBonusChange()">
+            </div>
+            <p class="form-hint">Bonuses, commissions, or taxable allowances not included above</p>
+          </div>
+
+          <!-- Income Summary Preview -->
+          <div class="income-summary" id="income-summary">
+            <div class="summary-row">
+              <span>Total Income:</span>
+              <span id="preview-total-income" class="summary-amount">RM 0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer card-footer--split">
+          <button type="button" class="btn btn-secondary" onclick="app.goToStep('intro')">Back</button>
+          <button type="button" class="btn btn-primary" onclick="app.goToStep('reliefs')" id="income-next-btn" disabled>
+            Continue to Reliefs
+          </button>
+        </div>
+      </section>
+
+      <!-- Section 3: Reliefs -->
+      <section id="reliefs-section" class="card section-card">
+        <div class="card-header">
+          <span class="section-badge">Step 2</span>
+          <h2>Tax Reliefs</h2>
+          <p class="subtitle">Claim what you're entitled to (values auto-capped at limits)</p>
+        </div>
+
+        <div class="card-body">
+          <!-- Self and Dependent Relief -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-self" class="relief-label">Self & Dependent Relief</label>
+              <span class="relief-cap" id="cap-self">Cap: RM 9,000</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-self" class="form-input relief-input" min="0" step="100" placeholder="0" data-cap="self" oninput="app.onReliefChange('self')">
+            </div>
+            <p class="relief-hint">Automatic for every resident taxpayer</p>
+          </div>
+
+          <!-- EPF & Life Insurance -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-epf" class="relief-label">EPF + Life Insurance</label>
+              <span class="relief-cap" id="cap-epf">Cap: RM 4,000</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-epf" class="form-input relief-input" min="0" step="100" placeholder="0" data-cap="epf" oninput="app.onReliefChange('epf')">
+            </div>
+            <p class="relief-hint">Your EPF contributions + life insurance premiums (check EA form for EPF amount)</p>
+          </div>
+
+          <!-- SOCSO -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-socso" class="relief-label">SOCSO / EIS / Employment Insurance</label>
+              <span class="relief-cap" id="cap-socso">Cap: RM 350</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-socso" class="form-input relief-input" min="0" step="10" placeholder="0" data-cap="socso" oninput="app.onReliefChange('socso')">
+            </div>
+            <p class="relief-hint">Your SOCSO and employment insurance contributions</p>
+          </div>
+
+          <!-- Lifestyle -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-lifestyle" class="relief-label">Lifestyle (Books, Sports, Internet, etc.)</label>
+              <span class="relief-cap" id="cap-lifestyle">Cap: RM 2,500</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-lifestyle" class="form-input relief-input" min="0" step="50" placeholder="0" data-cap="lifestyle" oninput="app.onReliefChange('lifestyle')">
+            </div>
+            <p class="relief-hint">Books, sports equipment, gym membership, internet bills, smartphones, computers</p>
+          </div>
+
+          <!-- Education Fees -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-education" class="relief-label">Education & Self-Improvement</label>
+              <span class="relief-cap" id="cap-education">Cap: RM 2,000</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-education" class="form-input relief-input" min="0" step="100" placeholder="0" data-cap="education" oninput="app.onReliefChange('education')">
+            </div>
+            <p class="relief-hint">Courses for skills/upgrading, professional qualifications, postgraduate studies</p>
+          </div>
+
+          <!-- Medical Expenses -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-medical" class="relief-label">Medical Expenses (Self/Spouse/Child)</label>
+              <span class="relief-cap" id="cap-medical">Cap: RM 10,000</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-medical" class="form-input relief-input" min="0" step="100" placeholder="0" data-cap="medical" oninput="app.onReliefChange('medical')">
+            </div>
+            <p class="relief-hint">Serious diseases, fertility treatment, vaccination, dental (limited), COVID-19 tests</p>
+          </div>
+
+          <!-- Parents Medical -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-parents" class="relief-label">Parents' Medical / Care Expenses</label>
+              <span class="relief-cap" id="cap-parents">Cap: RM 8,000</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-parents" class="form-input relief-input" min="0" step="100" placeholder="0" data-cap="parents" oninput="app.onReliefChange('parents')">
+            </div>
+            <p class="relief-hint">Medical treatment, nursing care, and dental for parents</p>
+          </div>
+
+          <!-- SSPN -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-sspn" class="relief-label">SSPN (National Education Savings)</label>
+              <span class="relief-cap" id="cap-sspn">Cap: RM 8,000</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-sspn" class="form-input relief-input" min="0" step="100" placeholder="0" data-cap="sspn" oninput="app.onReliefChange('sspn')">
+            </div>
+            <p class="relief-hint">Deposits into SSPN (Skim Simpanan Pendidikan Nasional) for children's education</p>
+          </div>
+
+          <!-- Childcare -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-childcare" class="relief-label">Childcare / Kindergarten</label>
+              <span class="relief-cap" id="cap-childcare">Cap: RM 3,000</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-childcare" class="form-input relief-input" min="0" step="100" placeholder="0" data-cap="childcare" oninput="app.onReliefChange('childcare')">
+            </div>
+            <p class="relief-hint">Fees for childcare centres and kindergartens (registered)</p>
+          </div>
+
+          <!-- PRS -->
+          <div class="relief-item">
+            <div class="relief-header">
+              <label for="relief-prs" class="relief-label">PRS (Private Retirement Scheme)</label>
+              <span class="relief-cap" id="cap-prs">Cap: RM 3,000</span>
+            </div>
+            <div class="input-prefix">
+              <span class="prefix">RM</span>
+              <input type="number" id="relief-prs" class="form-input relief-input" min="0" step="100" placeholder="0" data-cap="prs" oninput="app.onReliefChange('prs')">
+            </div>
+            <p class="relief-hint">Contributions to Private Retirement Schemes or deferred annuity plans</p>
+          </div>
+
+          <!-- Total Relief Preview -->
+          <div class="relief-total-box">
+            <span class="relief-total-label">Total Reliefs Claimed:</span>
+            <span id="preview-total-relief" class="relief-total-amount">RM 0</span>
+          </div>
+        </div>
+
+        <div class="card-footer card-footer--split">
+          <button type="button" class="btn btn-secondary" onclick="app.goToStep('income')">Back</button>
+          <button type="button" class="btn btn-primary" onclick="app.calculateAndShowResults()">
+            Calculate My Tax
+          </button>
+        </div>
+      </section>
+
+      <!-- Section 4: Results -->
+      <section id="results-section" class="card section-card">
+        <div class="card-header">
+          <span class="section-badge section-badge--success">Results</span>
+          <h2>Your Tax Estimate</h2>
+          <p class="subtitle">Here's what we calculated based on your inputs</p>
+        </div>
+
+        <div class="card-body">
+          <!-- SECTION 7: Missed Relief Detector -->
+          <div id="smart-suggestions" class="smart-suggestions hidden">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Main Results -->
+          <div class="results-grid">
+            <div class="result-card result-card--income">
+              <span class="result-label">Total Income</span>
+              <span id="result-total-income" class="result-value">RM 0</span>
+            </div>
+            <div class="result-card result-card--relief">
+              <span class="result-label">Total Reliefs</span>
+              <span id="result-total-relief" class="result-value">RM 0</span>
+            </div>
+            <div class="result-card result-card--chargeable">
+              <span class="result-label">Chargeable Income</span>
+              <span id="result-chargeable-income" class="result-value">RM 0</span>
+            </div>
+          </div>
+
+          <!-- Tax Bracket Info -->
+          <div class="tax-bracket-box">
+            <div class="bracket-header">
+              <span class="bracket-label">Estimated Tax Bracket</span>
+              <span id="result-tax-bracket" class="bracket-value">-</span>
+            </div>
+            <div class="bracket-bar-container">
+              <div id="bracket-progress" class="bracket-progress"></div>
+            </div>
+            <p id="bracket-description" class="bracket-description">-</p>
+          </div>
+
+          <!-- SECTION 5: Enhanced Result Breakdown -->
+          <div class="result-breakdown-card">
+            <h3 class="breakdown-title">📋 Your Breakdown</h3>
+            <div class="breakdown-rows">
+              <div class="breakdown-row">
+                <span class="breakdown-label">Income</span>
+                <span id="breakdown-income" class="breakdown-value">RM 0</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-label">Reliefs</span>
+                <span id="breakdown-reliefs" class="breakdown-value">− RM 0</span>
+              </div>
+              <div class="breakdown-row breakdown-row--highlight">
+                <span class="breakdown-label">Chargeable Income</span>
+                <span id="breakdown-chargeable" class="breakdown-value">RM 0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detailed Tax Calculation -->
+          <div class="tax-calculation">
+            <h3>Tax Calculation Breakdown</h3>
+            
+            <div class="calc-row">
+              <span>Tax before rebate</span>
+              <span id="result-tax-before-rebate">RM 0</span>
+            </div>
+            <div class="calc-row calc-row--highlight" id="rebate-row">
+              <span>
+                Tax Rebate
+                <small id="rebate-reason">(If chargeable income ≤ threshold)</small>
+              </span>
+              <span id="result-rebate">− RM 0</span>
+            </div>
+            <div class="calc-row calc-row--total">
+              <span>Final Estimated Tax</span>
+              <span id="result-final-tax">RM 0</span>
+            </div>
+            <div class="calc-divider"></div>
+            <div class="calc-row">
+              <span>Less: PCB/MTD Paid</span>
+              <span id="result-mtd-paid">− RM 0</span>
+            </div>
+            <div class="calc-row calc-row--balance" id="balance-row">
+              <span id="balance-label">Estimated Balance / Refund</span>
+              <span id="result-balance">RM 0</span>
+            </div>
+          </div>
+
+          <!-- SECTION 6: Explain My Result -->
+          <div class="explain-result-card">
+            <button type="button" class="btn btn-secondary btn-full" onclick="app.toggleExplainResult()">
+              <span id="explain-btn-text">🔍 Explain my result</span>
+            </button>
+            <div id="explain-result-content" class="explain-content hidden">
+              <h4>Why your result looks like this:</h4>
+              <ul id="explain-result-list">
+                <!-- Populated by JS -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Filing Recommendation -->
+          <div id="filing-recommendation" class="recommendation-box">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- SECTION 8: Result Disclaimer -->
+          <div class="result-disclaimer">
+            <p>⚠️ This is an estimate based on your inputs and built-in rules. Your actual tax may differ depending on eligibility, documentation, and official LHDN assessment.</p>
+          </div>
+
+          <!-- Reminders -->
+          <div class="reminders-box">
+            <h4>📌 Don't Forget</h4>
+            <ul>
+              <li>Keep all receipts and supporting documents for 7 years</li>
+              <li>File by the deadline to avoid penalties</li>
+              <li>Double-check your figures on MyTax before submitting</li>
+            </ul>
+          </div>
+
+          <!-- Official Next Steps -->
+          <div class="next-steps">
+            <h3>Official Next Steps</h3>
+            <div class="action-buttons">
+              <a href="https://mytax.hasil.gov.my" target="_blank" rel="noopener noreferrer" class="action-btn action-btn--primary">
+                <span class="action-icon">🏛️</span>
+                <span class="action-text">
+                  <strong>MyTax Portal</strong>
+                  <small>Official LHDN filing</small>
+                </span>
+              </a>
+              <a href="https://www.hasil.gov.my/en/individual/" target="_blank" rel="noopener noreferrer" class="action-btn">
+                <span class="action-icon">📋</span>
+                <span class="action-text">
+                  <strong>LHDN Tax Guide</strong>
+                  <small>Official tax information</small>
+                </span>
+              </a>
+              <a href="https://www.hasil.gov.my/en/individual/relief/" target="_blank" rel="noopener noreferrer" class="action-btn">
+                <span class="action-icon">💡</span>
+                <span class="action-text">
+                  <strong>Tax Reliefs</strong>
+                  <small>Complete relief list</small>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer card-footer--stacked">
+          <button type="button" class="btn btn-primary" onclick="app.goToStep('reliefs')">Edit My Reliefs</button>
+          <button type="button" class="btn btn-secondary" onclick="app.resetAndStartOver()">Start Over</button>
+        </div>
+      </section>
+
+      <!-- SECTION 9: Footer Disclaimer -->
+      <footer class="disclaimer" role="contentinfo">
+        <div class="disclaimer-icon">ℹ️</div>
+        <div class="disclaimer-content">
+          <p><strong>Disclaimer:</strong> This tool provides an educational estimate only and does not replace official LHDN guidance, MyTax filing, or professional advice. Tax rules change and individual circumstances vary. Always verify with official sources.</p>
+          <p class="disclaimer-affiliation">This project is an independent educational tool and is <strong>not affiliated with LHDN</strong>. Tax rules may change and this tool may not reflect the latest updates. Always verify with MyTax or official LHDN sources before filing.</p>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
