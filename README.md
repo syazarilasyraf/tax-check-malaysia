@@ -44,53 +44,6 @@ This tool provides an **educational estimate only** and does not replace officia
 
 ---
 
-## Run Locally
-
-No build step required. Just open the files in a browser:
-
-```bash
-# Option 1: Direct open
-open index.html
-
-# Option 2: Simple HTTP server
-python -m http.server 8000
-# Then visit: http://localhost:8000
-```
-
----
-
-## Deploy to Netlify
-
-### Option 1: Drag & Drop (Quickest)
-
-1. Zip the project files (`index.html`, `styles.css`, `app.js`, `README.md`)
-2. Go to [netlify.com/drop](https://app.netlify.com/drop)
-3. Drag and drop the zip file
-4. Done! Your site is live.
-
-### Option 2: Git-based Deploy
-
-1. Push this repo to GitHub
-2. Log in to [netlify.com](https://app.netlify.com)
-3. Click "Add new site" → "Import an existing project"
-4. Connect your GitHub repo
-5. Build settings:
-   - Build command: *(leave empty)*
-   - Publish directory: `/`
-6. Click "Deploy site"
-
-### Option 3: Netlify CLI
-
-```bash
-# Install CLI
-npm install -g netlify-cli
-
-# Deploy
-netlify deploy --prod --dir=.
-```
-
----
-
 ## Project Structure
 
 ```
